@@ -1,0 +1,15 @@
+Flask
+flask-cors
+requests
+python-dateutil
+pytz
+pymongo
+passlib[bcrypt]
+orjson
+openai
+llama-index<0.10
+pypdf
+transformers
+cryptography
+pycryptodomex
+pyOpenSSL

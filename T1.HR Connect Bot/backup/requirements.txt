@@ -1,0 +1,15 @@
+pip install Flask
+pip install requests
+
+pip install python-dateutil
+pip install pymongo
+pip install pytz
+pip install cryptography
+pip install flask-cors
+pip install gpt-index
+pip install pyOpenSSL
+pip install transformers
+pip install pycryptodomex
+pip install pypdf
+pip install orjson
+pip install pymongo

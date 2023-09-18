@@ -1,0 +1,25 @@
+.color-csquare{
+    background-color: #4b66ae;
+    color: #f49f3b;
+    /* background-color: #f49f3b; */
+}
+
+.color-csquare .btn{
+    color: #4b66ae;
+    border-color: #f49f3b;
+}
+
+.color-secondary{
+    color: #f49f3b;
+    /* color: #4b66ae; */
+}
+
+.csq-log-land {
+    width: 220px;
+}
+
+.error-lbl {
+    color: red;
+    font-size: smaller;
+    text-transform: none !important;
+}
