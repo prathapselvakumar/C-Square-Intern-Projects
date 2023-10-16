@@ -1,0 +1,38 @@
+[
+    {
+        "dayType": "C",
+        "CustID": "003004",
+        "DocDt": "03-Oct-2023",
+        "InvoiceTotal": "31809203.00",
+        "CreditNoteTotal": "520136.00",
+        "NetSale": "31289067.00",
+        "InvoiceCount": "10509",
+        "CreditNoteCount": "289",
+        "InvoiceAvg": "3026.85",
+        "CreditNoteAvg": "1799.78",
+        "InvoiceCustomerCount": "3798",
+        "CreditNoteCustomerCount": "234",
+        "InvoiceLineCount": "88521",
+        "CreditNotelineCount": "1422",
+        "CreditNoteExpBrkTotal": "520138",
+        "CustRecAmt": "26084653.67"
+    },
+    {
+        "dayType": "P",
+        "CustID": "003004",
+        "DocDt": "02-Oct-2023",
+        "InvoiceTotal": "32878845.17",
+        "CreditNoteTotal": "561575.42",
+        "NetSale": "32317269.75",
+        "InvoiceCount": "10549",
+        "CreditNoteCount": "288",
+        "InvoiceAvg": "3116.77",
+        "CreditNoteAvg": "1949.91",
+        "InvoiceCustomerCount": "3758",
+        "CreditNoteCustomerCount": "227",
+        "InvoiceLineCount": "95601",
+        "CreditNotelineCount": "1293",
+        "CreditNoteExpBrkTotal": "561568",
+        "CustRecAmt": "20728818.05"
+    }
+]
