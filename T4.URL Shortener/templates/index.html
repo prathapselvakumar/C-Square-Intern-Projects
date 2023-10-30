@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>URL Shortener</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h2 {
+            text-align: center;
+        }
+        form {
+            text-align: center;
+        }
+        label, input {
+            display: block;
+            margin-bottom: 10px;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ccc;
+        }
+        th {
+            background-color: #007BFF;
+            color: #fff;
+        }
+        button.copy-button {
+            background-color: #28a745;
+        }
+        button.copy-button:hover {
+            background-color: #1a8c38;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>URL Shortener</h2>
+        <form id="urlForm">
+            <label for="longUrl">Enter Long URL:</label>
+            <input type="text" id="longUrl" name="longUrl">
+            <button type="button" onclick="shortenUrl()">Shorten URL</button>
+
+            <h2>Short URL:</h2>
+            <input type="text" id="shortUrl" name="shortUrl" disabled>
+            <button class="copy-button" onclick="copyToClipboard()">Copy Short URL</button>
+        </form>
+
+        <h2>URLs</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Long URL</th>
+                    <th>Short URL</th>
+                    <th>Created On</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="urlTableBody">
+                <!-- Table rows will be dynamically populated here -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+
+        // Custom JSON encoder to handle ObjectId
+    function customJsonStringify(obj) {
+        return JSON.stringify(obj, function(key, value) {
+            if (value && value.constructor === ObjectId) {
+                return value.toString();
+            }
+            return value;
+        });
+    }
+
+        function shortenUrl() {
+            const longUrl = document.getElementById('longUrl').value;
+
+            fetch('/shorten_url', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: new URLSearchParams({
+                    'longUrl': longUrl
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('shortUrl').value = data.short_url;
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+        function copyToClipboard() {
+            const shortUrlField = document.getElementById('shortUrl').value;
+            const shortUrlLink = document.createElement('a');
+            shortUrlLink.href = shortUrlField;
+            shortUrlLink.target = '_blank';
+            shortUrlLink.textContent = 'Click here to visit the short URL';
+
+        // Append the link to the body
+         document.body.appendChild(shortUrlLink);
+
+        // Simulate a click on the link to open a new tab
+        shortUrlLink.click();
+
+        // Remove the link from the body
+        document.body.removeChild(shortUrlLink);
+        }
+
+        // Function to add rows to the URL table
+    function addRowsToTable() {
+        const urls = JSON.parse('{{ urls | tojson | safe }}');
+        const tableBody = document.getElementById('urlTableBody');
+
+        urls.forEach(url => {
+    const row = tableBody.insertRow();
+
+    const longUrlCell = row.insertCell(0);
+    longUrlCell.textContent = url.long_url;
+
+    const shortUrlCell = row.insertCell(1);
+    shortUrlCell.textContent = url.short_url;
+
+    const timeCell = row.insertCell(2);
+    timeCell.textContent = url.time;
+
+    const actionCell = row.insertCell(3);
+    const copyButton = document.createElement('button');
+    copyButton.textContent = 'COPY';
+    actionCell.appendChild(copyButton); // Added this line to append the button to the cell
+});
+
+const copyButtons = document.querySelectorAll('button');
+    copyButtons.forEach((button, index) => {
+        button.addEventListener('click', () => {
+            const shortUrl = urls[index].short_url;
+            // Call the function to copy the short URL to the clipboard
+            copyShortUrlToClipboard(shortUrl);
+        });
+    });
+}
+
+// Function to copy the short URL to the clipboard
+function copyShortUrlToClipboard(shortUrl) {
+    const tempInput = document.createElement('input');
+    tempInput.value = shortUrl;
+    document.body.appendChild(tempInput);
+    tempInput.select();
+    document.execCommand('copy');
+    document.body.removeChild(tempInput);
+}
+
+// Call the function to add rows to the table
+addRowsToTable();
+
+</script>
+</body>
+</html>
+
