@@ -1,0 +1,14 @@
+Flask
+requests
+python-dateutil
+pymongo
+pytz
+cryptography
+flask-cors
+gpt-index
+pyOpenSSL
+transformers
+pycryptodomex
+pypdf
+orjson
+pymongo

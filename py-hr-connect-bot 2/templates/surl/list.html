@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Shortened URLs</title>
+</head>
+<body>
+    <h1>Shortened URLs</h1>
+    <table>
+        <tr>
+            <th>Long URL</th>
+            <th>Short URL</th>
+            <th>Date Created</th>
+            <th>Copy</th>
+        </tr>
+        {% for short_url, data in urls.items() %}
+        <tr>
+            <td>{{ data['long_url'] }}</td>
+            <td>{{ short_url }}</td>
+            <td>{{ data['date_created'] }}</td>
+            <td><button onclick="copyToClipboard('{{ short_url }}')">Copy</button></td>
+        </tr>
+        {% endfor %}
+    </table>
+    <script>
+        function copyToClipboard(text) {
+            var tempInput = document.createElement("input");
+            tempInput.value = text;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand("copy");
+            document.body.removeChild(tempInput);
+        }
+    </script>
+</body>
+</html>

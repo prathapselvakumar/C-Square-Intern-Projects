@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>URL Shortener</title>
+    <style>
+        /* CSS styles here */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #3498db;
+            color: #fff;
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        h1 {
+            font-size: 28px;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Additional CSS styles here */
+        /* ... */
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            border-spacing: 0;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #3498db;
+            color: #fff;
+        }
+
+        td:last-child {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>URL Shortener</h1>
+    </header>
+    <div class="container">
+        <input type="text" id="longUrlInput" placeholder="Enter the long URL">
+        <button onclick="shortenUrl()">Shorten URL</button>
+        <div class="result" id="shortUrlDiv">
+            <label>Shortened URL:</label>
+            <input type="text" id="shortUrlInput" readonly>
+            <button onclick="copyToClipboard()">Copy</button>
+        </div>
+    </div>
+    <h2>URLs</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Long URL</th>
+                <th>Short URL</th>
+                <th>Created On</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody id="urlTableBody">
+            <!-- Table rows will be dynamically populated here -->
+        </tbody>
+    </table>  
+
+    <script>
+        function addRowToTable(url) {
+    const tableBody = document.getElementById("urlTableBody");
+    const row = tableBody.insertRow();
+
+    const longUrlCell = row.insertCell(0);
+    longUrlCell.textContent = url.long_url;
+
+    const shortUrlCell = row.insertCell(1);
+    shortUrlCell.innerHTML = `<a href="${url.short_url}" target="_blank">${url.short_url}</a>`;
+
+    const timeCell = row.insertCell(2);
+    timeCell.textContent = url.time;
+
+    const actionCell = row.insertCell(3);
+    const copyButton = document.createElement("button");
+    copyButton.textContent = "COPY";
+    copyButton.addEventListener("click", function () {
+        copyToClipboard(url.short_url);
+    });
+    actionCell.appendChild(copyButton);
+}
+
+function copyToClipboard(text) {
+    const dummy = document.createElement("textarea");
+    document.body.appendChild(dummy);
+    dummy.value = text;
+    dummy.select();
+    document.execCommand("copy");
+    document.body.removeChild(dummy);
+    alert("Copied to clipboard: " + text);
+}
+
+
+            // Make an AJAX request to Flask to shorten the URL
+            fetch('/shorten_url', {
+                method: 'POST',
+                body: JSON.stringify({ long_url: longUrl }),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                const shortUrlInput = document.getElementById("shortUrlInput");
+                shortUrlInput.value = data.short_url;
+            })
+            .catch(error => console.error(error));
+        
+
+
+    </script>
+
+    
+</body>
+</html>

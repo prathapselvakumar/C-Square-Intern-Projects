@@ -1,0 +1,239 @@
+{% extends 'base.html' %}
+{% block head %}
+<style>
+    .chat-user-img {
+        margin-top: -20px !important;
+    }
+    .message-custom-in {
+        padding: 5px 10px !important;
+        background-color: rgb(10, 10, 10);
+    }
+    .message-custom-out {
+        padding: 5px 10px !important;
+        background-color: aqua;
+    }
+
+</style>
+{% endblock %}
+{% block content %}
+<div class="page-body">
+
+    <!-- Container-fluid starts-->
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col call-chat-body">
+                <div class="card">
+                    <div class="card-body p-0">
+                        <div class="row chat-box">
+                            <!-- Chat right side start-->
+                            <div class="col chat-right-aside">
+                                <!-- chat start-->
+                                <div class="chat">
+                                    <!-- chat-header start-->
+                                    <div class="media chat-header clearfix"><img class="rounded-circle"
+                                            src="../assets/images/user/dhi.jpg" alt="">
+                                        <div class="media-body">
+                                            <div class="about">
+                                                <div class="name">Ask Dhi</div>
+                                                <div class="status digits">Online</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- chat-header end-->
+                                    <div id="div-chat-history" class="chat-history chat-msg-box custom-scrollbar">
+                                        <ul id="ul-message-history">
+                                        </ul>
+                                    </div>
+                                    <!-- end chat-history-->
+                                    <div class="chat-message clearfix">
+                                        <div class="row">
+                                            <div class="col-xl-12 d-flex">
+                                                <div class="input-group text-box">
+                                                    <input class="form-control input-txt-bx" id="message-to-send"
+                                                        type="text" name="message-to-send"
+                                                        placeholder="Type a message......">
+                                                    <button class="btn btn-primary input-group-text" type="button"
+                                                        id="btn-send-message" onclick="sendMessage()">SEND</button>
+                                                    <button class="btn btn-secondary input-group-text" type = "button"
+                                                        id="btn-restart" onclick = "restartChat()">RESTART</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- end chat-message-->
+                                    <!-- chat end-->
+                                    <!-- Chat right side ends-->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Container-fluid Ends-->
+</div>
+{% endblock %}
+
+{% block script %}
+<script>
+    function addHistoryOut(message, time = null) {
+        ul = document.getElementById('ul-message-history');
+        li = document.createElement('li');
+        divMain = document.createElement('div');
+        divDate = document.createElement('div');
+        spanDate = document.createElement('span');
+        if (time == null) {
+            time = getNow();
+        }
+        spanDate.append(time);
+        "message-data-time".split(" ").forEach(c => {
+            spanDate.classList.add(c);
+        })
+
+        divDate.append(spanDate);
+        "message-data".split(" ").forEach(c => {
+            divDate.classList.add(c);
+        })
+
+        divMain.append(divDate);
+        divMain.append(message);
+        "message other-message pull-right message-custom-out".split(" ").forEach(c => {
+            divMain.classList.add(c);
+        })
+
+        li.append(divMain);
+        "clearfix".split(" ").forEach(c => {
+            li.classList.add(c);
+        })
+
+        ul.append(li);
+        $("#div-chat-history").animate({ scrollTop: $('#div-chat-history').prop("scrollHeight")}, 1000);
+    }
+
+    function addHistoryIn(user, message, time = null) {
+        ul = document.getElementById('ul-message-history');
+        li = document.createElement('li');
+        divMain = document.createElement('div');
+        divDate = document.createElement('div');
+        spanDate = document.createElement('span');
+        img = document.createElement('img');
+
+        "rounded-circle float-start chat-user-img img-30".split(" ").forEach(c => {
+            img.classList.add(c);
+        })
+        img.setAttribute("src", "../assets/images/user/dhi.jpg");
+
+        if (time == null) {
+            time = getNow();
+        }
+        spanDate.append(time);
+        "message-data-time".split(" ").forEach(c => {
+            spanDate.classList.add(c);
+        })
+
+        divDate.append(spanDate);
+        "message-data text-end".split(" ").forEach(c => {
+            divDate.classList.add(c);
+        })
+
+        divMain.append(img);
+        divMain.append(divDate);
+        divMain.append(message);
+        "message my-message message-custom-in".split(" ").forEach(c => {
+            divMain.classList.add(c);
+        })
+
+        li.append(divMain);
+
+        ul.append(li);
+        $("#div-chat-history").animate({ scrollTop: $('#div-chat-history').prop("scrollHeight")}, 1000);
+    }
+
+    function sendMessage(){ 
+        message = $('#message-to-send').val().trim();
+        if(message == ""){
+            return false
+        }
+
+        $('#message-to-send').prop('disabled', true);
+        $('#btn-send-message').prop('disabled', true);
+        $('#btn-restart').prop('disabled', true);
+        addHistoryOut(message);
+        payload = {
+            to: "dhi",
+            text: message
+        }
+            
+        $.ajax({
+            url: "/chat/send-message",
+            type: 'post',
+            dataType: 'json',
+            contentType: 'application/json',
+            data: JSON.stringify(payload),
+            success: function (r) {
+                console.log(r);
+                addHistoryIn("dhi", r.response);
+                $('#message-to-send').prop('disabled', false);
+                $('#btn-send-message').prop('disabled', false);
+                $('#btn-restart').prop('disabled', false);
+          
+            },
+            error: function (e) {
+                addHistoryIn("dhi", "***Unable to process the request, please try again***");
+                $('#message-to-send').prop('disabled', false);
+                $('#btn-send-message').prop('disabled', false);
+                $('#btn-restart').prop('disabled', false);
+            }
+
+        });
+          $('#message-to-send').val("")
+    }
+      
+        function restartChat(){
+        $ ('#ul-message-history').empty();
+        $ ('#message-to-send').val('');
+     
+        $.ajax({
+        url: '/chat/clear-history',
+        type: 'GET',
+        success: function(response) {
+            // Handle the success response
+            console.log(response);
+            // Perform any additional actions after clearing the history
+        },
+        error: function(xhr, status, error) {
+            // Handle the error response
+            console.log(error);
+        }
+    });
+
+
+        // addHistoryIn("dhi", message);
+        
+        }
+
+    function getNow() {
+        var currentTime = new Date();
+        var hours = currentTime.getHours();
+        var minutes = currentTime.getMinutes();
+        var amPm = hours >= 12 ? 'PM' : 'AM';
+
+        // convert to 12-hour format
+        hours = hours % 12;
+        hours = hours ? hours : 12;
+        minutes = minutes < 10 ? '0' + minutes : minutes;
+
+        var formattedTime = hours + ':' + minutes + ' ' + amPm;
+        return formattedTime;
+    };
+
+    $('#message-to-send').on("keypress", function (e) {
+        if (e.keyCode == 13) {
+            $('#btn-send-message').click();
+            return false; 
+        }
+    });
+
+</script>
+{% endblock %}

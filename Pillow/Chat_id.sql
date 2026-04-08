@@ -1,0 +1,1 @@
+SELECT * FROM chat_id.telegram_table;
