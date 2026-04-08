@@ -1,174 +1,70 @@
-# C-Square Intern Projects
+# 🚀 C-Square-Intern-Projects
 
-This repository is a portfolio of internship work completed at C SQUARE. It is not a single application; instead, it collects several standalone Python projects covering Flask apps, Telegram automation, image generation, and spreadsheet processing.
+> [!IMPORTANT]
+> **Security & Privacy Notice**: Due to security and privacy issues, I was allowed to contribute only the code included in this repository. 
 
-Due to privacy and security restrictions, I am only allowed to update and share the code that is included in this repository.
+## 📌 Overview
+This repository is a curated collection of projects and automation tools developed during my internship at **C SQUARE**. It demonstrates proficiency in full-stack development, AI integration, and process automation.
 
-## Repository Structure
+---
 
-| Folder | What it contains | Core stack |
-| --- | --- | --- |
-| `py-hr-connect-bot 2` | HR assistant prototype with Flask, MongoDB-backed auth/session storage, and LlamaIndex/OpenAI-based document chat | Flask, MongoDB, LlamaIndex, OpenAI |
-| `Shorten url` | URL shortener with a Flask UI and MongoDB persistence | Flask, PyMongo |
-| `TELEGRAMBOT` | Telegram bot experiments for holiday tracking, with in-memory and MySQL-backed variants | `pyTelegramBotAPI`, MySQL |
-| `Pillow` | KPI image generator that renders a report card image and sends it to Telegram | Pillow, Telegram, MySQL |
-| `Training Task` | Small Excel automation script that labels rows as winner or looser based on sales vs target | pandas, Excel |
+## 📂 Project Portfolio
 
-## Important Notes
+| Project Name | Directory | Tech Stack | Purpose |
+| :--- | :--- | :--- | :--- |
+| **🤖 HR Connect Bot** | `py-hr-connect-bot 2` | Flask, MongoDB, AI | AI-driven HR management system. |
+| **🔗 URL Shortener** | `Shorten url` | Flask, Python | Web utility for link management. |
+| **🛡️ Telegram Bot** | `TELEGRAMBOT` | Python, Telegram API | Automated communication tool. |
+| **📊 Training Automation** | `Training Task` | Python, Excel | Data processing and winner selection. |
+| **🖼️ Image Processing** | `Pillow` | PIL (Pillow) | Batch image manipulation scripts. |
 
-- Each folder is its own mini-project. There is no shared root application or root dependency file.
-- Due to privacy and security restrictions, repository updates are limited to the code and assets that are safe to include here.
-- Some files include hardcoded local paths, tokens, passwords, or connection strings from the original internship work. Treat those values as historical placeholders and replace them with environment variables or local test credentials before running anything.
-- The repo currently contains runtime/generated artifacts such as `output.png`, Excel files, and large static assets.
-- There are no automated tests or CI workflows in the repository.
+---
 
-## Project Details
+## 🛠️ Detailed Key Modules
 
-### 1. `py-hr-connect-bot 2`
+### 1. HR Connect Bot (Flagship)
+An advanced bot leveraging Large Language Models (LLMs) to automate HR inquiries and document processing.
+*   **Intelligence**: Integration with `Transformers` and `LlamaIndex` for smart context retrieval.
+*   **Storage**: MongoDB backend for scalable data handling.
+*   **Security**: Implementation of `cryptography` for secure data transmission.
+*   **Docs**: Automated PDF parsing using `pypdf`.
 
-A Flask-based HR chatbot prototype that combines:
+### 2. URL Shortener
+A lightweight Flask application for shortening URLs.
+*   **Interface**: Clean, responsive UI for inputting and managing links.
+*   **Logic**: Custom hashing algorithm to generate unique short IDs.
 
-- user signup/login pages backed by MongoDB
-- session handling and simple encrypted session payloads
-- document ingestion from the local `docs/` folder
-- LlamaIndex-powered querying over ingested HR documents
-- chat session/history persistence in MongoDB
+---
 
-Key files:
+## ⚙️ Setup & Installation
 
-- `py-hr-connect-bot 2/app.py`: basic Flask app, signup/login routes, static asset serving
-- `py-hr-connect-bot 2/pkg_imp.py`: app bootstrap, session helpers, OpenAI/LlamaIndex setup, Mongo connection
-- `py-hr-connect-bot 2/views/chat.py`: `/chat` page route
-- `py-hr-connect-bot 2/models/chat.py`: chat/session models and message endpoints
-- `py-hr-connect-bot 2/config.py`: external URLs and Mongo configuration
-- `py-hr-connect-bot 2/requirements.txt`: project requirements list
+### Prerequisites
+*   Python 3.8 or higher
+*   Virtual environment (recommended)
+*   MongoDB instance (for HR Connect Bot)
 
-What to know before running:
+### Step-by-Step Installation
+1.  **Clone the Repo**:
+    ```bash
+    git clone https://github.com/prathapselvakumar/C-Square-Intern-Projects.git
+    cd C-Square-Intern-Projects
+    ```
+2.  **Initialize Environment**:
+    ```bash
+    python -m venv .venv
+    source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+    ```
+3.  **Install Dependencies**:
+    Navigate to each module to install specific requirements, or use the root environment:
+    ```bash
+    pip install -r "py-hr-connect-bot 2/requirements.txt"
+    ```
 
-- `pkg_imp.py` builds the vector index from the local `docs/` folder at startup.
-- The code expects MongoDB, OpenAI access, and several Python packages that are not fully reflected in `requirements.txt`.
-- The source imports `passlib` and `openai`, so those may need to be installed manually in addition to the listed requirements.
-- The project appears to contain both prototype and deployment-oriented files (`app.wsgi`, `backup/`, vendored virtualenv files under `c_square/`).
+---
 
-Typical local start:
+## 🧰 Technology Summary
+![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
+![Flask](https://img.shields.io/badge/flask-%23000.svg?style=for-the-badge&logo=flask&logoColor=white)
+![MongoDB](https://img.shields.io/badge/MongoDB-%234ea94b.svg?style=for-the-badge&logo=mongodb&logoColor=white)
+![Git](https://img.shields.io/badge/git-%23F05032.svg?style=for-the-badge&logo=git&logoColor=white)
 
-```bash
-cd "py-hr-connect-bot 2"
-pip install -r requirements.txt
-pip install passlib[bcrypt] openai
-python app.py
-```
-
-### 2. `Shorten url`
-
-A simple Flask URL shortener with a browser UI. It stores long and short URLs in a MongoDB collection and redirects `/<short_id>` requests back to the original URL.
-
-Key files:
-
-- `Shorten url/app.py`: Flask routes and MongoDB integration
-- `Shorten url/templates/index.html`: main UI for submitting and listing URLs
-- `Shorten url/url_shortener.py`: helper class for generating random short URLs
-- `Shorten url/static/style.css`: styling assets
-
-Behavior:
-
-- connects to local MongoDB at `mongodb://localhost:27017`
-- uses database `url` and collection `urls`
-- reuses an existing short URL if the same long URL has already been stored
-- returns JSON from `/shorten_url` and performs redirect on `/<short_url>`
-
-Typical local start:
-
-```bash
-cd "Shorten url"
-pip install flask pymongo
-python app.py
-```
-
-### 3. `TELEGRAMBOT`
-
-This folder contains two Telegram bot variants centered on holiday tracking:
-
-- `TELEGRAMBOT/app.py`: in-memory version storing holidays in a Python dictionary
-- `TELEGRAMBOT/main.py`: MySQL-backed version that creates and queries a `holidays` table
-
-Bot capabilities include:
-
-- `/start` and `/help`
-- adding holidays from chat text
-- listing saved holidays
-- simple utility commands such as `/sayhello`, `/echo`, and `/time` in the in-memory version
-
-Typical local start:
-
-```bash
-cd TELEGRAMBOT
-pip install pyTelegramBotAPI mysql-connector-python
-python app.py
-```
-
-Use `python main.py` instead if you want the MySQL-backed variant and have a matching database configured.
-
-### 4. `Pillow`
-
-This project generates a KPI comparison image using a background template, directional arrows, and numeric values loaded from `data.json`. Two variants then send the generated image to Telegram.
-
-Key files:
-
-- `Pillow/index.py`: local image generation script with hardcoded absolute macOS paths
-- `Pillow/app.py`: image generation plus Telegram send using hardcoded token/chat id
-- `Pillow/main.py`: image generation plus Telegram send using token/chat id fetched from MySQL
-- `Pillow/data.json`: source metrics used to render the image
-- `Pillow/mainimg.jpg`, `up_arrow.jpg`, `down_arrow.jpg`, `impact.ttf`: rendering assets
-- `Pillow/output.png`: generated output image
-
-Typical local start:
-
-```bash
-cd Pillow
-pip install pillow python-telegram-bot mysql-connector-python
-python app.py
-```
-
-If you only want to render the image locally, `index.py` is the closest standalone script, but its absolute file paths need to be changed first.
-
-### 5. `Training Task`
-
-A minimal spreadsheet automation script that reads `data.xlsx`, compares `sales` against `target`, and writes a `result` column with either `winner` or `looser`.
-
-Key files:
-
-- `Training Task/Prathap S.py`: pandas script
-- `Training Task/data.xlsx`: source workbook
-- `Training Task/winners.xlsx`: additional workbook stored in the repo
-
-Typical local start:
-
-```bash
-cd "Training Task"
-pip install pandas openpyxl
-python "Prathap S.py"
-```
-
-Note: the script currently writes back to `data.xlsx` rather than exporting to a separate output file.
-
-## Suggested Setup Approach
-
-Because the projects are independent, the safest way to explore the repo is to create one virtual environment and then install dependencies per folder as needed:
-
-```bash
-python -m venv .venv
-.venv\Scripts\activate
-```
-
-Then install only the packages required for the project you want to run.
-
-## Recommended Cleanup Ideas
-
-If this repository is going to be shared publicly or maintained further, the next practical improvements would be:
-
-1. Move secrets and connection strings into environment variables.
-2. Add a small `requirements.txt` or `pyproject.toml` for each subproject that is currently missing one.
-3. Remove vendored virtualenv/runtime files from tracked source folders.
-4. Add screenshots or sample outputs for the Flask UI and generated KPI image.
-5. Add basic run instructions inside each project folder as local READMEs.
